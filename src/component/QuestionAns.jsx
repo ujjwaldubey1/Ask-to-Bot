@@ -2,14 +2,13 @@ import { useContext, useState, useEffect } from "react"
 import { mycontext } from "../ContextApi"
 
 export const QuestionAns = () => {
-	const { text } = useContext(mycontext) // Accessing the context
-	const [questions, setQuestions] = useState([]) // State to store questions
-	const [responses, setResponses] = useState({}) // State to store responses
-	const [processedQuestions, setProcessedQuestions] = useState(new Set()) // To track processed questions
-
+	const { text } = useContext(mycontext) 
+	const [questions, setQuestions] = useState([]) 
+	const [responses, setResponses] = useState({})
+	const [processedQuestions, setProcessedQuestions] = useState(new Set()) 
 	useEffect(() => {
 		if (text.length > 0) {
-			const newQuestion = text[text.length - 1] // Get the latest question
+			const newQuestion = text[text.length - 1] 
 
 			if (!processedQuestions.has(newQuestion)) {
 				setQuestions((prevQuestions) => [...prevQuestions, newQuestion])
@@ -17,12 +16,11 @@ export const QuestionAns = () => {
 					const newSet = new Set(prev)
 					newSet.add(newQuestion)
 					return newSet
-				}) // Mark the question as processed
+				}) 
 				fetchResponse(newQuestion)
 			}
 		}
-	}, [text, processedQuestions]) // Include processedQuestions in dependencies
-
+	}, [text, processedQuestions]) 
 	const fetchResponse = async (question) => {
 		try {
 			const res = await fetch(
