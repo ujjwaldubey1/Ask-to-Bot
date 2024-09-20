@@ -3,6 +3,7 @@ import { mycontext } from "../ContextApi"
 
 export const QuestionAns = () => {
 	const { text } = useContext(mycontext)
+<<<<<<< HEAD
 	const [questions, setQuestions] = useState([])
 	const [responses, setResponses] = useState({})
 
@@ -13,7 +14,32 @@ export const QuestionAns = () => {
 			newQuestions.forEach((question) => fetchResponse(question))
 		}
 	}, [text])
+=======
+	const [questions, setQuestions] = useState([]) 
+	const [responses, setResponses] = useState({})
+	const [processedQuestions, setProcessedQuestions] = useState(new Set()) 
+	
+	useEffect(() => {
+		if (text.length > 0) {
+			const newQuestion = text[text.length - 1] 
 
+			if (!processedQuestions.has(newQuestion)) {
+			
+				setQuestions((prevQuestions) => [...prevQuestions, newQuestion])
+				
+				setProcessedQuestions((prev) => {
+					const newSet = new Set(prev)
+					newSet.add(newQuestion)
+					return newSet
+				})
+				
+				fetchResponse(newQuestion)
+			}
+		}
+	}, [text]) 
+>>>>>>> origin/main
+
+	
 	const fetchResponse = async (question) => {
 		try {
 			const res = await fetch(
@@ -40,6 +66,7 @@ export const QuestionAns = () => {
 				data?.candidates?.[0]?.content?.parts?.[0]?.text ||
 				"No answer available"
 
+			
 			setResponses((prevResponses) => ({
 				...prevResponses,
 				[question]: answer,
