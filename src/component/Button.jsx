@@ -9,16 +9,17 @@ export const Button = () => {
 
 	const handleKeyDown = (event) => {
 		if (event.key === "Enter" && inputText.trim() !== "") {
-			setText((prevtext) => [...prevtext, inputText])
-			setInputText("")
+			handleSend()
 		}
 	}
-	const handleOnchange = (event) => {
+
+	const handleOnChange = (event) => {
 		setInputText(event.target.value)
 	}
+
 	const handleSend = () => {
 		if (inputText.trim() !== "") {
-			setText((prevtext) => [...prevtext, inputText])
+			setText((prevText) => [...prevText, inputText])
 			setInputText("")
 		}
 	}
@@ -33,13 +34,10 @@ export const Button = () => {
 			<div className="flex-1 overflow-auto">
 				<div className="flex flex-col">
 					{text.map((mesg, index) => (
-						<div
-							className="bg-blue-100 text-blue-800 p-3 rounded-lg shadow-md max-w-xs break-words my-2"
-							key={index}>
-							{mesg}
-							<QuestionAns />
-						</div>
+						<div key={index}></div>
 					))}
+					{/* Render QuestionAns once below all messages */}
+					<QuestionAns />
 					<div ref={messagesEndRef} />
 				</div>
 			</div>
@@ -49,7 +47,7 @@ export const Button = () => {
 					type="text"
 					placeholder="You can talk to me"
 					value={inputText}
-					onChange={handleOnchange}
+					onChange={handleOnChange}
 					onKeyDown={handleKeyDown}
 				/>
 				<button

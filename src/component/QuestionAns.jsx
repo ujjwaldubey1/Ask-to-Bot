@@ -2,31 +2,22 @@ import { useContext, useState, useEffect } from "react"
 import { mycontext } from "../ContextApi"
 
 export const QuestionAns = () => {
-	const { text } = useContext(mycontext) // Accessing the context
-	const [questions, setQuestions] = useState([]) // State to store questions
-	const [responses, setResponses] = useState({}) // State to store responses
-	const [processedQuestions, setProcessedQuestions] = useState(new Set()) // To track processed questions
+	const { text } = useContext(mycontext)
+	const [questions, setQuestions] = useState([])
+	const [responses, setResponses] = useState({})
 
 	useEffect(() => {
-		if (text.length > 0) {
-			const newQuestion = text[text.length - 1] // Get the latest question
-
-			if (!processedQuestions.has(newQuestion)) {
-				setQuestions((prevQuestions) => [...prevQuestions, newQuestion])
-				setProcessedQuestions((prev) => {
-					const newSet = new Set(prev)
-					newSet.add(newQuestion)
-					return newSet
-				}) // Mark the question as processed
-				fetchResponse(newQuestion)
-			}
+		const newQuestions = text.filter((msg) => !questions.includes(msg))
+		if (newQuestions.length > 0) {
+			setQuestions((prevQuestions) => [...prevQuestions, ...newQuestions])
+			newQuestions.forEach((question) => fetchResponse(question))
 		}
-	}, [text, processedQuestions]) // Include processedQuestions in dependencies
+	}, [text])
 
 	const fetchResponse = async (question) => {
 		try {
 			const res = await fetch(
-				`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${process.env.REACT_APP_API_KEY}`,
+				"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyB3N1fjbVYOjBE99iSSyKuzrTb7OKr5VKE",
 				{
 					method: "POST",
 					headers: {
@@ -35,11 +26,7 @@ export const QuestionAns = () => {
 					body: JSON.stringify({
 						contents: [
 							{
-								parts: [
-									{
-										text: question,
-									},
-								],
+								parts: [{ text: question }],
 							},
 						],
 					}),
@@ -67,16 +54,18 @@ export const QuestionAns = () => {
 	}
 
 	return (
-		<div className="bg-yellow-100 p-5 rounded-lg shadow-lg mt-5">
-			<p className="text-gray-700 font-semibold">Responses:</p>
-			<div>
+		<div className="bg-gray-200 p-5 rounded-lg shadow-md mt-5 transition-transform transform hover:scale-105">
+			<p className="text-gray-700 font-semibold">Conversation:</p>
+			<div className="space-y-4">
 				{questions.map((question, index) => (
-					<div key={index} className="mb-2">
+					<div
+						key={index}
+						className="bg-white shadow-neumorphic p-4 rounded-lg mb-2 transition-shadow hover:shadow-lg">
 						<p>
-							<strong>Q:</strong> {question}
+							<strong className="text-blue-600">Q:</strong> {question}
 						</p>
 						<p>
-							<strong>A:</strong>{" "}
+							<strong className="text-green-600">A:</strong>{" "}
 							{responses[question] || "Waiting for response..."}
 						</p>
 					</div>
