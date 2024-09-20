@@ -2,29 +2,35 @@ import { useContext, useState, useEffect } from "react"
 import { mycontext } from "../ContextApi"
 
 export const QuestionAns = () => {
-	const { text } = useContext(mycontext) 
+	const { text } = useContext(mycontext)
 	const [questions, setQuestions] = useState([]) 
 	const [responses, setResponses] = useState({})
 	const [processedQuestions, setProcessedQuestions] = useState(new Set()) 
+	
 	useEffect(() => {
 		if (text.length > 0) {
 			const newQuestion = text[text.length - 1] 
 
 			if (!processedQuestions.has(newQuestion)) {
+			
 				setQuestions((prevQuestions) => [...prevQuestions, newQuestion])
+				
 				setProcessedQuestions((prev) => {
 					const newSet = new Set(prev)
 					newSet.add(newQuestion)
 					return newSet
-				}) 
+				})
+				
 				fetchResponse(newQuestion)
 			}
 		}
-	}, [text, processedQuestions]) 
+	}, [text]) 
+
+	
 	const fetchResponse = async (question) => {
 		try {
 			const res = await fetch(
-				`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${process.env.REACT_APP_API_KEY}`,
+				"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyB3N1fjbVYOjBE99iSSyKuzrTb7OKr5VKE",
 				{
 					method: "POST",
 					headers: {
@@ -51,6 +57,7 @@ export const QuestionAns = () => {
 				data?.candidates?.[0]?.content?.parts?.[0]?.text ||
 				"No answer available"
 
+			
 			setResponses((prevResponses) => ({
 				...prevResponses,
 				[question]: answer,
