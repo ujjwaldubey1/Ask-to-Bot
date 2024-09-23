@@ -3,7 +3,7 @@ import { mycontext } from "../ContextApi"
 
 export const QuestionAns = () => {
 	const { text } = useContext(mycontext)
-<<<<<<< HEAD
+
 	const [questions, setQuestions] = useState([])
 	const [responses, setResponses] = useState({})
 
@@ -14,7 +14,7 @@ export const QuestionAns = () => {
 			newQuestions.forEach((question) => fetchResponse(question))
 		}
 	}, [text])
-=======
+
 	const [questions, setQuestions] = useState([]) 
 	const [responses, setResponses] = useState({})
 	const [processedQuestions, setProcessedQuestions] = useState(new Set()) 
@@ -37,7 +37,7 @@ export const QuestionAns = () => {
 			}
 		}
 	}, [text]) 
->>>>>>> origin/main
+
 
 	
 	const fetchResponse = async (question) => {
