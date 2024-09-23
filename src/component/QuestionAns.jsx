@@ -6,40 +6,27 @@ export const QuestionAns = () => {
 
 	const [questions, setQuestions] = useState([])
 	const [responses, setResponses] = useState({})
+	const [processedQuestions, setProcessedQuestions] = useState(new Set())
 
 	useEffect(() => {
-		const newQuestions = text.filter((msg) => !questions.includes(msg))
-		if (newQuestions.length > 0) {
-			setQuestions((prevQuestions) => [...prevQuestions, ...newQuestions])
-			newQuestions.forEach((question) => fetchResponse(question))
-		}
-	}, [text])
-
-	const [questions, setQuestions] = useState([]) 
-	const [responses, setResponses] = useState({})
-	const [processedQuestions, setProcessedQuestions] = useState(new Set()) 
-	
-	useEffect(() => {
-		if (text.length > 0) {
-			const newQuestion = text[text.length - 1] 
+		if (text && text.length > 0) {
+			const newQuestion = text[text.length - 1] // Get the latest message
 
 			if (!processedQuestions.has(newQuestion)) {
-			
+				// Check if the question is already processed
 				setQuestions((prevQuestions) => [...prevQuestions, newQuestion])
-				
+
 				setProcessedQuestions((prev) => {
 					const newSet = new Set(prev)
 					newSet.add(newQuestion)
 					return newSet
 				})
-				
-				fetchResponse(newQuestion)
+
+				fetchResponse(newQuestion) // Fetch the response
 			}
 		}
-	}, [text]) 
+	}, [text])
 
-
-	
 	const fetchResponse = async (question) => {
 		try {
 			const res = await fetch(
@@ -66,7 +53,6 @@ export const QuestionAns = () => {
 				data?.candidates?.[0]?.content?.parts?.[0]?.text ||
 				"No answer available"
 
-			
 			setResponses((prevResponses) => ({
 				...prevResponses,
 				[question]: answer,
@@ -101,3 +87,4 @@ export const QuestionAns = () => {
 		</div>
 	)
 }
+
